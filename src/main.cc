@@ -1,5 +1,7 @@
 #include <iostream> 
-#include "boolean-logic.h"
+#include "atom.h"
+#include "literal.h"
+#include "clause.h"
 
 int main() {
   std::cout << "welcome to potato-sat! :)" 
