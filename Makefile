@@ -7,3 +7,6 @@ PROGNAME := potato-sat
 
 all: 
 	$(CC) $(FLAGS) $(SOURCES) -o $(PROGNAME)
+
+basic: 
+	$(CC) $(SOURCES) -o $(PROGNAME)
