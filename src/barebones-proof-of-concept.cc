@@ -17,9 +17,10 @@ Clause    add_literal(Clause c, Literal l);
 Literal negate_literal(Literal l); 
 Literal choose_literal(const Clause_set& s); 
 bool dpll(std::set<Clause> s); 
-Clause_set assign_literal(Clause_set s, Literal l); 
+Clause_set assign_literal(const Clause_set& s, Literal l); 
 void propagate_unit_clauses(Clause_set&); 
 void eliminate_pure_literals(Clause_set&); 
+std::set<Literal> find_pure_literals(const Clause_set&); 
 bool is_empty(const Clause_set& s); 
 bool has_empty_clause(const Clause_set& s); 
 void print_clause_set(const Clause_set& s); 
@@ -52,11 +53,12 @@ bool has_empty_clause(const Clause_set& s) {
   return false; 
 }
 
-Clause_set assign_literal(Clause_set s, Literal l) {
+Clause_set assign_literal(const Clause_set& s, Literal l) {
   Clause new_clause = Clause(); 
   new_clause.insert(l); 
-  s.insert(new_clause); 
-  return s; 
+  Clause_set extended_set = Clause_set(s); 
+  extended_set.insert(new_clause); 
+  return extended_set; 
 }
 
 void propagate_unit_clauses(Clause_set& s) { 
@@ -105,7 +107,65 @@ void propagate_unit_clauses(Clause_set& s) {
   print_clause_set(s);
 
 }
-void eliminate_pure_literals(Clause_set& s) { /* TODO */ }
+
+void eliminate_pure_literals(Clause_set& s) {
+
+  std::cout << "]]]]]]]]]] elim-pure-lits was give clause set ";
+  print_clause_set(s); 
+  
+  std::set<Literal> pure_literals = find_pure_literals(s); 
+
+  std::cout << "]]]]]]]]]] found pure lits "; 
+  print_clause(pure_literals); 
+  std::cout << std::endl; 
+  
+  Clause_set clauses_to_eliminate; 
+  for (Clause c : s) {
+    for (Literal l : c) {
+      if (pure_literals.count(l) > 0) {
+        clauses_to_eliminate.insert(c); 
+      }
+    }
+  }
+
+  for (Clause c : clauses_to_eliminate) {
+    s.erase(c); 
+  }
+
+  /* TODO */ 
+}
+
+std::set<Literal> find_pure_literals(const Clause_set& s) {
+
+  std::set<Literal> positive_atoms; 
+  std::set<Literal> negated_atoms; 
+  for (Clause c : s) {
+    for (Literal l : c) {
+      if (l > 0) {
+        positive_atoms.insert(l); 
+      } else {
+        negated_atoms.insert(l); 
+      }
+    }
+  }
+
+  std::set<Literal> result; 
+  for (Literal l : positive_atoms) {
+    Literal not_l = negate_literal(l); 
+    if (negated_atoms.count(not_l) == 0) {
+      result.insert(l); 
+    }
+  }
+  for (Literal not_l : negated_atoms) {
+    Literal l = negate_literal(not_l); 
+    if (positive_atoms.count(l) == 0) {
+      result.insert(not_l); 
+    }
+  }
+
+  return result; 
+
+}
 
 bool dpll(Clause_set s) {
 
