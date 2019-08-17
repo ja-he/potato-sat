@@ -1,12 +1,16 @@
 CC := g++
 FLAGS := -Wall -Wextra -O3
-SRCDIR := src
-SRCEXT := cc
-SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
-PROGNAME := potato-sat
+SOURCES := src/dpll-basic.cc
+MAIN := src/main.cc
+TESTFILE := test/test.cc
+PROGNAME := bin/potato-sat
+TESTPROGNAME := bin/run-tests
 
 all: 
-	$(CC) $(FLAGS) $(SOURCES) -o $(PROGNAME)
+	$(CC) $(FLAGS) $(MAIN) $(SOURCES) -o $(PROGNAME)
+
+testsuite: 
+	$(CC) $(TESTFILE) $(SOURCES) -o $(TESTPROGNAME)
 
 basic: 
 	$(CC) $(SOURCES) -o $(PROGNAME)

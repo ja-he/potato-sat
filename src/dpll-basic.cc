@@ -1,40 +1,6 @@
 #include <set> 
 #include <iostream> 
-
-/*** CATCH ***************
-#define CATCH_CONFIG_MAIN
-#include "catch2/catch.h"
-*************************/
-
-// using Atom    = unsigned int; 
-using Literal = int; 
-using Clause  = std::set<Literal>; 
-using Clause_set = std::set<Clause>; 
-
-// DECLARATIONS: 
-Clause remove_literal(Clause c, Literal l); 
-Clause    add_literal(Clause c, Literal l); 
-Literal negate_literal(Literal l); 
-Literal choose_literal(const Clause_set& s); 
-bool dpll(std::set<Clause> s); 
-Clause_set assign_literal(const Clause_set& s, Literal l); 
-void propagate_unit_clauses(Clause_set&); 
-void eliminate_pure_literals(Clause_set&); 
-std::set<Literal> find_pure_literals(const Clause_set&); 
-bool is_empty(const Clause_set& s); 
-bool has_empty_clause(const Clause_set& s); 
-void print_clause_set(const Clause_set& s); 
-void print_clause(const Clause& c); 
-
-/*
-// TESTS: 
-TEST_CASE( "propagate removes unit clause", "[propagate_unit_clauses]" ) {
-  Clause_set input {{1},{2,3},{4,5,6}}; 
-  Clause_set result {{2,3},{4,5,6}}; 
-  REQUIRE( propagate_unit_clauses(input) == result );
-}
-*/
-
+#include "dpll-basic.h"
 
 // IMPLEMENTATIONS: 
 Clause remove_literal(Clause c, Literal l) { c.erase(l); return c; }
@@ -206,7 +172,7 @@ void print_clause_set(const Clause_set& s) {
   }
   std::cout << "] " << std::endl; 
 } 
-
+/*
 
 
 
@@ -225,3 +191,4 @@ int main() {
   std::cout << ((dpll(s)) ? "SAT" : "UNSAT") << std::endl; 
   return 0; 
 }
+*/
