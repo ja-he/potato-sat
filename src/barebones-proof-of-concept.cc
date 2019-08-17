@@ -1,6 +1,11 @@
 #include <set> 
 #include <iostream> 
 
+/*** CATCH ***************
+#define CATCH_CONFIG_MAIN
+#include "catch2/catch.h"
+*************************/
+
 // using Atom    = unsigned int; 
 using Literal = int; 
 using Clause  = std::set<Literal>; 
@@ -10,16 +15,24 @@ using Clause_set = std::set<Clause>;
 Clause remove_literal(Clause c, Literal l); 
 Clause    add_literal(Clause c, Literal l); 
 Literal negate_literal(Literal l); 
-Literal choose_literal(Clause_set s); 
+Literal choose_literal(const Clause_set& s); 
 bool dpll(std::set<Clause> s); 
 Clause_set assign_literal(Clause_set s, Literal l); 
-Clause_set propagate_unit_clauses(Clause_set); 
-Clause_set eliminate_pure_literals(Clause_set); 
-bool is_empty(Clause_set s); 
-bool has_empty_clause(Clause_set s); 
-void print_clause_set(Clause_set s); 
-void print_clause(Clause c); 
+void propagate_unit_clauses(Clause_set&); 
+void eliminate_pure_literals(Clause_set&); 
+bool is_empty(const Clause_set& s); 
+bool has_empty_clause(const Clause_set& s); 
+void print_clause_set(const Clause_set& s); 
+void print_clause(const Clause& c); 
 
+/*
+// TESTS: 
+TEST_CASE( "propagate removes unit clause", "[propagate_unit_clauses]" ) {
+  Clause_set input {{1},{2,3},{4,5,6}}; 
+  Clause_set result {{2,3},{4,5,6}}; 
+  REQUIRE( propagate_unit_clauses(input) == result );
+}
+*/
 
 
 // IMPLEMENTATIONS: 
@@ -27,12 +40,12 @@ Clause remove_literal(Clause c, Literal l) { c.erase(l); return c; }
 Clause add_literal(Clause c, Literal l) { c.insert(l); return c; }
 Literal negate_literal(Literal l) { return (-1)*l; } 
 
-Literal choose_literal(Clause_set s) {
+Literal choose_literal(const Clause_set& s) {
   return *(s.begin()->begin());
 }
 
-bool is_empty(Clause_set s) { return s.empty(); }
-bool has_empty_clause(Clause_set s) { 
+bool is_empty(const Clause_set& s) { return s.empty(); }
+bool has_empty_clause(const Clause_set& s) { 
   for (Clause c : s) {
     if (c.empty()) return true; 
   }
@@ -46,7 +59,7 @@ Clause_set assign_literal(Clause_set s, Literal l) {
   return s; 
 }
 
-Clause_set propagate_unit_clauses(Clause_set s) { 
+void propagate_unit_clauses(Clause_set& s) { 
   // DBG
   std::cout << "    given clause set: "; 
   print_clause_set(s); 
@@ -88,12 +101,11 @@ Clause_set propagate_unit_clauses(Clause_set s) {
   }
 
   // DBG
-  std::cout << "    returing clause set: "; 
+  std::cout << "    final clause set: "; 
   print_clause_set(s);
 
-  return s; 
 }
-Clause_set eliminate_pure_literals(Clause_set s) { return s; /* TODO */ }
+void eliminate_pure_literals(Clause_set& s) { /* TODO */ }
 
 bool dpll(Clause_set s) {
 
@@ -104,14 +116,14 @@ bool dpll(Clause_set s) {
   // DBG
   std::cout << "  UNITPROP:" << std::endl; 
 
-  s = propagate_unit_clauses(s); 
+  propagate_unit_clauses(s); 
 
   // DBG
   std::cout << "  after: "; 
   print_clause_set(s); 
 
   if (has_empty_clause(s)) return false; 
-  s = eliminate_pure_literals(s); 
+  eliminate_pure_literals(s); 
   if (is_empty(s)) return true; 
   Literal l = choose_literal(s); 
   Literal not_l = negate_literal(l); 
@@ -119,7 +131,7 @@ bool dpll(Clause_set s) {
       || dpll(assign_literal(s, not_l)); 
 }
 
-void print_clause(Clause c) {
+void print_clause(const Clause& c) {
   std::cout << "{ "; 
   for (Literal l : c) {
     std::cout << l << " "; 
@@ -127,7 +139,7 @@ void print_clause(Clause c) {
   std::cout << "} "; 
 }
 
-void print_clause_set(Clause_set s) {
+void print_clause_set(const Clause_set& s) {
   std::cout << "[ "; 
   for (Clause c : s) {
     print_clause(c);
