@@ -2,12 +2,10 @@
 #include <iostream> 
 #include "dpll-basic.h"
 
-// IMPLEMENTATIONS: 
-Clause remove_literal(Clause c, Literal l) { c.erase(l); return c; }
-Clause add_literal(Clause c, Literal l) { c.insert(l); return c; }
 Literal negate_literal(Literal l) { return (-1)*l; } 
 
-Literal choose_literal(const Clause_set& s) {
+Literal choose_literal(const Clause_set& s, Literal_choosing_heuristic h) {
+  // TODO: actually use the indicated heuristic 
   return *(s.begin()->begin());
 }
 
@@ -151,7 +149,7 @@ bool dpll(Clause_set s) {
   if (has_empty_clause(s)) return false; 
   eliminate_pure_literals(s); 
   if (is_empty(s)) return true; 
-  Literal l = choose_literal(s); 
+  Literal l = choose_literal(s, random_choice_heuristic); 
   Literal not_l = negate_literal(l); 
   return dpll(assign_literal(s,     l)) 
       || dpll(assign_literal(s, not_l)); 
@@ -172,23 +170,3 @@ void print_clause_set(const Clause_set& s) {
   }
   std::cout << "] " << std::endl; 
 } 
-/*
-
-
-
-
-
-int main() {
-  Clause_set s { {-1,2}
-               , {-1,3,9} 
-               , {-2,-3,4} 
-               , {-4,5,10} 
-               , {-4,6,11} 
-               , {-5,-6} 
-               , {1,7,-12} 
-               , {1,8} 
-               , {-7,-8,-13} };
-  std::cout << ((dpll(s)) ? "SAT" : "UNSAT") << std::endl; 
-  return 0; 
-}
-*/
