@@ -1,5 +1,5 @@
 CC := clang++
-FLAGS := -Wall -Wextra -O3
+FLAGS := -Wall -Wextra -Wpedantic -O3 -std=c++2a
 SRCEXT := cc
 SRCDIR := src
 TESTDIR := test
