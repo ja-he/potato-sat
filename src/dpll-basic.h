@@ -51,7 +51,7 @@ enum Literal_choosing_heuristic {
  * @param l the literal
  * @return  the negation of l
  */
-Literal negate_literal(Literal l); 
+auto negate_literal(Literal l) -> Literal ; 
 
 /**
  * Chooses a Literal from the given set of clauses via a given heuristic
@@ -61,7 +61,9 @@ Literal negate_literal(Literal l);
  * @param h   a heuristic by which to choose a literal 
  * @return    a literal 
  */
-Literal choose_literal(const Clause_set& s, Literal_choosing_heuristic h); 
+auto choose_literal(const Clause_set& s, 
+                    Literal_choosing_heuristic h) 
+                    -> Literal; 
 
 /**
  * Performs a basic variant of the Davis-Putnam-Logemann-Loveland (or DPLL)
@@ -82,7 +84,7 @@ bool dpll(Clause_set s);
  * @param l   the literal 
  * @return    another clause set extended by the unit clause {l}
  */
-Clause_set assign_literal(const Clause_set& s, Literal l); 
+auto assign_literal(const Clause_set& s, Literal l) -> Clause_set; 
 
 /**
  * Deletes all unit clauses in the clause set as well as any other clauses
@@ -109,7 +111,7 @@ void eliminate_pure_literals(Clause_set& s);
  * @param s   the set of clauses 
  * @return    all pure literals in the set of clauses 
  */
-std::set<Literal> find_pure_literals(const Clause_set& s); 
+auto find_pure_literals(const Clause_set& s) -> std::set<Literal>; 
 
 /**
  * Returns whether a given set of clauses is empty, i.E. contains no clauses. 
@@ -117,7 +119,7 @@ std::set<Literal> find_pure_literals(const Clause_set& s);
  * @param s the set of clauses 
  * @return  whether s is empty
  */
-bool is_empty(const Clause_set& s); 
+auto is_empty(const Clause_set& s) -> bool; 
 
 /**
  * Returns whether a given set of clauses contains an empty clause. 
@@ -125,7 +127,7 @@ bool is_empty(const Clause_set& s);
  * @param s the set of clauses 
  * @return  whether {} in s
  */
-bool has_empty_clause(const Clause_set& s); 
+auto has_empty_clause(const Clause_set& s) -> bool; 
 
 /**
  * Prints a given set of clauses.

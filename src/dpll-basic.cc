@@ -2,22 +2,30 @@
 #include <iostream> 
 #include "dpll-basic.h"
 
-Literal negate_literal(Literal l) { return (-1)*l; } 
+auto negate_literal(Literal l) -> Literal 
+{ return (-1)*l; } 
 
-Literal choose_literal(const Clause_set& s, Literal_choosing_heuristic h) {
+auto choose_literal(const Clause_set& s, 
+                    Literal_choosing_heuristic h) 
+                    -> Literal
+{
   // TODO: actually use the indicated heuristic 
   return *(s.begin()->begin());
 }
 
-bool is_empty(const Clause_set& s) { return s.empty(); }
-bool has_empty_clause(const Clause_set& s) { 
+auto is_empty(const Clause_set& s) -> bool 
+{ return s.empty(); }
+
+auto has_empty_clause(const Clause_set& s) -> bool 
+{
   for (Clause c : s) {
     if (c.empty()) return true; 
   }
   return false; 
 }
 
-Clause_set assign_literal(const Clause_set& s, Literal l) {
+auto assign_literal(const Clause_set& s, Literal l) -> Clause_set
+{
   Clause new_clause = Clause(); 
   new_clause.insert(l); 
   Clause_set extended_set = Clause_set(s); 
@@ -25,7 +33,8 @@ Clause_set assign_literal(const Clause_set& s, Literal l) {
   return extended_set; 
 }
 
-void propagate_unit_clauses(Clause_set& s) { 
+void propagate_unit_clauses(Clause_set& s) 
+{ 
   // DBG
   std::cout << "    given clause set: "; 
   print_clause_set(s); 
@@ -72,14 +81,14 @@ void propagate_unit_clauses(Clause_set& s) {
 
 }
 
-void eliminate_pure_literals(Clause_set& s) {
-
-  std::cout << "]]]]]]]]]] elim-pure-lits was give clause set ";
+void eliminate_pure_literals(Clause_set& s) 
+{
+  std::cout << "    elim-pure-lits was give clause set ";
   print_clause_set(s); 
   
   std::set<Literal> pure_literals = find_pure_literals(s); 
 
-  std::cout << "]]]]]]]]]] found pure lits "; 
+  std::cout << "    found pure lits "; 
   print_clause(pure_literals); 
   std::cout << std::endl; 
   
@@ -99,8 +108,8 @@ void eliminate_pure_literals(Clause_set& s) {
   /* TODO */ 
 }
 
-std::set<Literal> find_pure_literals(const Clause_set& s) {
-
+auto find_pure_literals(const Clause_set& s) -> std::set<Literal> 
+{
   std::set<Literal> positive_atoms; 
   std::set<Literal> negated_atoms; 
   for (Clause c : s) {
@@ -128,11 +137,10 @@ std::set<Literal> find_pure_literals(const Clause_set& s) {
   }
 
   return result; 
-
 }
 
-bool dpll(Clause_set s) {
-
+auto dpll(Clause_set s) -> bool 
+{
   // DBG
   std::cout << "dpll for "; 
   print_clause_set(s); 
@@ -142,20 +150,26 @@ bool dpll(Clause_set s) {
 
   propagate_unit_clauses(s); 
 
-  // DBG
-  std::cout << "  after: "; 
-  print_clause_set(s); 
-
   if (has_empty_clause(s)) return false; 
+
+  // DBG
+  std::cout << "  PURELITELIM:" << std::endl; 
+
   eliminate_pure_literals(s); 
+
   if (is_empty(s)) return true; 
+
+  // TODO! 
+
+
   Literal l = choose_literal(s, random_choice_heuristic); 
   Literal not_l = negate_literal(l); 
   return dpll(assign_literal(s,     l)) 
       || dpll(assign_literal(s, not_l)); 
 }
 
-void print_clause(const Clause& c) {
+void print_clause(const Clause& c) 
+{
   std::cout << "{ "; 
   for (Literal l : c) {
     std::cout << l << " "; 
@@ -163,7 +177,8 @@ void print_clause(const Clause& c) {
   std::cout << "} "; 
 }
 
-void print_clause_set(const Clause_set& s) {
+void print_clause_set(const Clause_set& s) 
+{
   std::cout << "[ "; 
   for (Clause c : s) {
     print_clause(c);
