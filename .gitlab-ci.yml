@@ -4,15 +4,13 @@
 # see https://hub.docker.com/_/gcc/
 image: conanio/clang8
 
-before-script: 
-    - apt-get update && apt-get install -y make autoconf
-
 stages: 
     - build 
     - test
     
 job 1: 
     stage: build 
+    before-script: apt-get update && apt-get install -y make autoconf
     script: make
 
 job 2: 
