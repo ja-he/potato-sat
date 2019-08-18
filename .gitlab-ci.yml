@@ -10,7 +10,8 @@ stages:
     
 job 1: 
     stage: build 
-    before_script: apt-get update && apt-get install -y make autoconf
+    before_script:
+        - apt-get update && apt-get install -y make autoconf
     script: make
 
 job 2: 
