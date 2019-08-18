@@ -10,7 +10,7 @@ stages:
     
 job 1: 
     stage: build 
-    script: g++ src/main.cc $(shell find src -type f -name *.cc ! -name main.cc) -o bin/potato-sat
+    script: g++ src/main.cc $(find src -type f -name *.cc ! -name main.cc) -o bin/potato-sat
 
 job 2: 
     stage: test
