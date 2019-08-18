@@ -8,11 +8,14 @@ MAINFILE := $(SRCDIR)/main.$(SRCEXT)
 TESTFILE := $(TESTDIR)/test.$(SRCEXT)
 PROGNAME := bin/potato-sat
 TESTPROGNAME := bin/run-tests
+CONDITIONALBINDIRCREATION := if [ ! -d bin ]; then mkdir bin; fi 
 
 all: 
+	$(CONDITIONALBINDIRCREATION)
 	$(CC) $(FLAGS) $(MAINFILE) $(SOURCES) -o $(PROGNAME)
 
 testsuite: 
+	$(CONDITIONALBINDIRCREATION)
 	$(CC) $(TESTFILE) $(SOURCES) -o $(TESTPROGNAME)
 
 basic: 
