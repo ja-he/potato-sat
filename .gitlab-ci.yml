@@ -2,7 +2,7 @@
 # use the official gcc image, based on debian
 # can use verions as well, like gcc:5.2
 # see https://hub.docker.com/_/gcc/
-image: gcc
+image: conanio/clang8
 
 stages: 
     - build 
@@ -10,8 +10,8 @@ stages:
     
 job 1: 
     stage: build 
-    script: mkdir bin && g++ src/main.cc $(find src -type f -name *.cc ! -name main.cc) -o bin/potato-sat
+    script: mkdir bin && clang++ src/main.cc $(find src -type f -name *.cc ! -name main.cc) -o bin/potato-sat
 
 job 2: 
     stage: test
-    script: mkdir bin && g++ test/test.cc $(find src -type f -name *.cc ! -name main.cc) -o bin/run-tests && bin/run-tests
+    script: mkdir bin && clang++ test/test.cc $(find src -type f -name *.cc ! -name main.cc) -o bin/run-tests && bin/run-tests
