@@ -24,7 +24,7 @@ is_empty(const Clause_set& s) -> bool
 auto
 has_empty_clause(const Clause_set& s) -> bool
 {
-  for (Clause const &c : s) {
+  for (Clause const& c : s) {
     if (c.empty())
       return true;
   }
@@ -49,7 +49,7 @@ propagate_unit_clauses(Clause_set& s)
   print_clause_set(s);
 
   std::set<Literal> unit_literals = std::set<Literal>();
-  for (Clause const &c : s) {
+  for (Clause const& c : s) {
     if (c.size() == 1) {
       unit_literals.insert(*(c.begin()));
     }
@@ -64,12 +64,12 @@ propagate_unit_clauses(Clause_set& s)
 
     // erase any clause that contains l
     Clause_set clauses_containing_unit_literal = Clause_set();
-    for (Clause const &c : s) {
+    for (Clause const& c : s) {
       if (c.count(unit_literal) > 0) {
         clauses_containing_unit_literal.insert(c);
       }
     }
-    for (Clause const &c : clauses_containing_unit_literal) {
+    for (Clause const& c : clauses_containing_unit_literal) {
       s.erase(c);
     }
 
@@ -102,7 +102,7 @@ eliminate_pure_literals(Clause_set& s)
   std::cout << std::endl;
 
   Clause_set clauses_to_eliminate;
-  for (Clause const &c : s) {
+  for (Clause const& c : s) {
     for (Literal l : c) {
       if (pure_literals.count(l) > 0) {
         clauses_to_eliminate.insert(c);
@@ -110,7 +110,7 @@ eliminate_pure_literals(Clause_set& s)
     }
   }
 
-  for (Clause const &c : clauses_to_eliminate) {
+  for (Clause const& c : clauses_to_eliminate) {
     s.erase(c);
   }
 
@@ -122,7 +122,7 @@ find_pure_literals(const Clause_set& s) -> std::set<Literal>
 {
   std::set<Literal> positive_atoms;
   std::set<Literal> negated_atoms;
-  for (Clause const &c : s) {
+  for (Clause const& c : s) {
     for (Literal l : c) {
       if (l > 0) {
         positive_atoms.insert(l);
@@ -193,7 +193,7 @@ void
 print_clause_set(const Clause_set& s)
 {
   std::cout << "[ ";
-  for (Clause const &c : s) {
+  for (Clause const& c : s) {
     print_clause(c);
   }
   std::cout << "] " << std::endl;
