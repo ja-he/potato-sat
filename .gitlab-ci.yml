@@ -1,0 +1,17 @@
+# This file is a template, and might need editing before it works on your project.
+# use the official gcc image, based on debian
+# can use verions as well, like gcc:5.2
+# see https://hub.docker.com/_/gcc/
+image: gcc
+
+stages: 
+    - build 
+    - test
+    
+job 1: 
+    stage: build 
+    script: g++ src/main.cc $(shell find src -type f -name *.cc ! -name main.cc) -o bin/potato-sat
+
+job 2: 
+    stage: test
+    script: g++ -Wall -Werror -O3 src/main.cc $(shell find src -type f -name *.cc ! -name main.cc) -o bin/run-tests && bin/run-tests
