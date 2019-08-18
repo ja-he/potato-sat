@@ -20,3 +20,7 @@ basic:
 
 clean: 
 	rm -r bin/*
+
+guidelinescheck: 
+	clang-tidy $(SOURCES) --checks=cppcoreguidelines* --
+
