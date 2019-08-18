@@ -4,14 +4,17 @@
 # see https://hub.docker.com/_/gcc/
 image: conanio/clang8
 
+before-script: 
+    - apt-get update && apt-get install -y make autoconf
+
 stages: 
     - build 
     - test
     
 job 1: 
     stage: build 
-    script: mkdir bin && clang++ src/main.cc $(find src -type f -name *.cc ! -name main.cc) -o bin/potato-sat
+    script: make
 
 job 2: 
     stage: test
-    script: mkdir bin && clang++ test/test.cc $(find src -type f -name *.cc ! -name main.cc) -o bin/run-tests && bin/run-tests
+    script: make testsuite && bin/run-tests
