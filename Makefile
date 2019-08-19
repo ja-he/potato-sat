@@ -25,5 +25,5 @@ clean:
 	rm -r bin/*
 
 guidelinescheck: 
-	clang-tidy $(SOURCES) --checks=cppcoreguidelines* --
+	clang-tidy $(MAINFILE) $(SOURCES) --checks=cppcoreguidelines* --
 
