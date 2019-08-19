@@ -7,16 +7,15 @@
 struct Potato_SAT_settings
 {
 public:
-  bool print_progress = false; 
-  Literal_choosing_heuristic h = random_choice_heuristic; 
+  bool parsing_error = false; 
+  bool print_progress = false;
+  bool printed_help_msg = false;
+  Literal_choosing_heuristic h = random_choice_heuristic;
   // TODO(ztf) lots missing here, gotta think up all the proper options etc
 };
 
-cxxopts::ParseResult
-parse(int, char**);
-
 Potato_SAT_settings
-find_settings(int, char**);
+parse(int, char**);
 
 void
 print_settings(Potato_SAT_settings& settings);
