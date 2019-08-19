@@ -73,6 +73,10 @@ find_settings(int argc, char** argv)
 
   Potato_SAT_settings settings; 
 
+  if (result.count("print-progress")) {
+    settings.print_progress = true; 
+  }
+
   // TODO(ztf) read out the results from cxxopts and put them into my own format
 
   return settings; 
@@ -83,7 +87,7 @@ print_settings(Potato_SAT_settings& settings)
 {
   std::cout << "Settings:" << '\n' 
             << "  * " 
-            << (settings.print_progress ? "" : "not") << "printing progress"
+            << (settings.print_progress ? "" : "not ") << "printing progress"
             // TODO(ztf) more settings
             << std::endl; 
 }
