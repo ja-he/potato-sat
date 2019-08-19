@@ -7,7 +7,7 @@
 struct Potato_SAT_settings
 {
 public:
-  bool parsing_error = false; 
+  bool parsing_error = false;
   bool print_progress = false;
   bool printed_help_msg = false;
   Literal_choosing_heuristic h = random_choice_heuristic;

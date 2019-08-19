@@ -4,12 +4,12 @@
 Potato_SAT_settings
 parse(int argc, char** argv)
 {
-  Potato_SAT_settings settings; 
+  Potato_SAT_settings settings;
   try {
     cxxopts::Options options(argv[0], "[idk what to put here...?]");
     options.positional_help("[optional args]").show_positional_help();
 
-    bool print_progress = false; 
+    bool print_progress = false;
 
     options
       .add_options()
@@ -20,18 +20,17 @@ parse(int argc, char** argv)
       ("help", "Print help")
     ;
 
-    options.parse_positional({"input", "output"});
+    options.parse_positional({ "input", "output" });
 
     auto result = options.parse(argc, argv);
 
-
     if (result.count("help")) {
       std::cout << options.help({ "" }) << std::endl;
-      settings.printed_help_msg = true; 
+      settings.printed_help_msg = true;
     }
 
     if (print_progress) {
-      settings.print_progress = true; 
+      settings.print_progress = true;
     }
 
     if (result.count("heuristic")) {
@@ -42,18 +41,17 @@ parse(int argc, char** argv)
 
   } catch (const cxxopts::OptionException& e) {
     std::cout << "error parsing options: " << e.what() << std::endl;
-    settings.parsing_error = true; 
+    settings.parsing_error = true;
   }
   return settings;
 }
 
-
 void
 print_settings(Potato_SAT_settings& settings)
 {
-  std::cout << "Settings:" << '\n' 
-            << "  * " 
-            << (settings.print_progress ? "" : "not ") << "printing progress"
+  std::cout << "Settings:" << '\n'
+            << "  * " << (settings.print_progress ? "" : "not ")
+            << "printing progress"
             // TODO(ztf) more settings
-            << std::endl; 
+            << std::endl;
 }
