@@ -6,6 +6,12 @@
 #include <string>
 #include <vector>
 
+bool
+dimacs_line_is_comment(const std::string& line)
+{
+  return (line.length() > 0 && line[0] == 'c');
+}
+
 std::optional<Clause>
 parse_clause(std::string& clausestr)
 {
@@ -41,10 +47,4 @@ parse_clause(std::string& clausestr)
   }
 
   return result;
-}
-
-bool
-dimacs_line_is_comment(std::string& line)
-{
-  return (line.length() > 0 && line[0] == 'c');
 }
