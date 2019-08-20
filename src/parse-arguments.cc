@@ -17,6 +17,8 @@ parse(int argc, char** argv)
        cxxopts::value<bool>(print_progress)) 
       ("h,heuristic", "Variable choosing heuristic", 
        cxxopts::value<std::string>()->default_value("random"),"<heuristic>")
+      ("i,input-file", "Read from a given <file> instead of STDIN", 
+       cxxopts::value<std::string>(),"<file>") 
       ("help", "Print help")
     ;
 
@@ -37,6 +39,11 @@ parse(int argc, char** argv)
       std::cout << "Saw option ‘heuristic’" << std::endl;
       auto& heuristic = result["heuristic"].as<std::string>();
       std::cout << "–– gives: " << heuristic << std::endl;
+    }
+
+    if (result.count("input-file")) {
+      settings.read_file = true; 
+      settings.file_location = result["input-file"].as<std::string>();
     }
 
   } catch (const cxxopts::OptionException& e) {

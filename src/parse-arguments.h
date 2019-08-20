@@ -10,6 +10,8 @@ public:
   bool parsing_error = false;
   bool print_progress = false;
   bool printed_help_msg = false;
+  bool read_file = false; 
+  std::string file_location; 
   Literal_choosing_heuristic h = random_choice_heuristic;
   // TODO(ztf) lots missing here, gotta think up all the proper options etc
 };
