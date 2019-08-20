@@ -14,6 +14,15 @@ dimacs_line_is_comment(const std::string& line)
   return (line.length() > 0 && line[0] == 'c');
 }
 
+// TODO(ztf)
+//   thinking about having parse_dimacs_line() instead of parse_clause be
+//   called by read_in_dimacs_file() and then return a pair or struct  of two 
+//   values where one is of type 
+//        enum line_type { comment, p-line, clause, error }
+//   and the other of type 
+//        Clause
+//   and is potentially empty (unless the former == clause). 
+
 std::optional<Clause>
 parse_clause(std::string& clausestr)
 {
