@@ -12,9 +12,9 @@ main(int argc, char** argv)
 
   // immmediate stops to further program execution
   if (settings.parsing_error) {
-    return 1;
+    return EXIT_FAILURE;
   } else if (settings.printed_help_msg) {
-    return 0;
+    return EXIT_SUCCESS;
   }
 
   // print_settings(settings);
@@ -22,18 +22,18 @@ main(int argc, char** argv)
   Clause_set s;
 
   if (settings.read_file) {
-
-    read_in_dimacs_file(settings.file_location, s);
-
-    /*
-     */
-
+    if (read_in_dimacs_file(settings.file_location, s)) {
+      std::cout << "successfully read in file" << std::endl;
+    } else {
+      std::cerr << "error reading file as DIMACS cnf" << std::endl; 
+      return EXIT_FAILURE; 
+    }
   } else {
     // TODO(ztf) read STDIN
-    return 0;
+    return EXIT_SUCCESS;
   }
 
   std::cout << ((dpll(s)) ? "SAT" : "UNSAT") << std::endl;
 
-  return 0;
+  return EXIT_SUCCESS;
 }

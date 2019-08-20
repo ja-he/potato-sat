@@ -9,10 +9,20 @@
 #include <vector>
 
 bool
-dimacs_line_is_comment(const std::string& line)
+is_comment(const std::string& line)
 {
   return (line.length() > 0 && line[0] == 'c');
 }
+
+bool
+is_problem_line(const std::string& line)
+{
+  return (line.length() > 0 && line[0] == 'p');
+}
+
+void
+parse_problem_line(std::string& line) 
+{ /* TODO */ }
 
 // TODO(ztf)
 //   thinking about having parse_dimacs_line() instead of parse_clause be
@@ -23,14 +33,17 @@ dimacs_line_is_comment(const std::string& line)
 //        Clause
 //   and is potentially empty (unless the former == clause).
 
-std::optional<Clause>
-parse_clause(std::string& clausestr)
+DIMACS_line_type
+parse_dimacs_line(std::string& line, Clause& clause_buf)
 {
-  std::optional<Clause> result;
-  Clause prospective_clause;
-  bool error_while_parsing = false;
+  if (is_comment(line)) {
+    return comment; 
+  } else if (is_problem_line(line)) {
+    parse_problem_line(line);
+    return problem; 
+  }
 
-  std::istringstream iss(clausestr);
+  std::istringstream iss(line);
   std::vector<std::string> prospective_literals{
     std::istream_iterator<std::string>{ iss },
     std::istream_iterator<std::string>{},
@@ -44,20 +57,15 @@ parse_clause(std::string& clausestr)
         // end of line (according to DIMACS)
         break;
       } else {
-        prospective_clause.insert(prospective_literal);
+        clause_buf.insert(prospective_literal);
       }
     } catch (...) {
-      std::cerr << "error encountered" << std::endl;
-      error_while_parsing = true;
-      break;
+      std::cerr << "error encountered: line (" << line
+                << ") not recognized" << std::endl;
+      return unrecognized; 
     }
   }
-
-  if (!error_while_parsing) {
-    result.emplace(prospective_clause);
-  }
-
-  return result;
+  return clause;
 }
 
 bool
@@ -72,21 +80,32 @@ read_in_dimacs_file(std::string file_location, Clause_set& clause_set_buf)
     return 1;
   }
 
+  unsigned int line_nr = 0; 
   std::string current_line;
   std::optional<Clause> current_clause;
   std::cout << "GIVEN A FILE, READING...\n";
   while (std::getline(given_input_file, current_line)) {
-    if (!dimacs_line_is_comment(current_line)) {
-      current_clause = parse_clause(current_line);
-      if (current_clause.has_value()) {
-        std::cout << std::setw(30) << " | ";
-        print_clause(current_clause.value());
-        clause_set_buf.insert(current_clause.value());
-      } else {
-        std::cout << std::setw(30) << " | seems to have had no value...";
-      }
-      std::cout << '\r' << current_line << '\n';
+    Clause current_clause;
+    DIMACS_line_type parse_result =
+      parse_dimacs_line(current_line, current_clause);
+    std::cout << ++line_nr << " ["; 
+    switch (parse_result) {
+      case clause: 
+        std::cout << "clause]: "; 
+        print_clause(current_clause);
+        clause_set_buf.insert(current_clause);
+        break; 
+      case comment: 
+        std::cout << "comment]"; 
+        break;
+      case problem: 
+        std::cout << "problem]"; 
+        break;
+      case unrecognized: 
+        std::cout << "unrecognized]"; 
+        break;
     }
+    std::cout << '\n'; 
   }
   std::cout << std::flush;
 
