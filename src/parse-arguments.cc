@@ -4,8 +4,15 @@
 Potato_SAT_settings
 parse(int argc, char** argv)
 {
+
   Potato_SAT_settings settings;
+
   try {
+
+    // we use cxxopts here to get the options, be able to print a help message
+    // easily etc, but then we use the settings we find that way and store them
+    // in our own format to return that back to main.
+
     cxxopts::Options options(argv[0], "[idk what to put here...?]");
     options.positional_help("[optional args]").show_positional_help();
 
@@ -30,24 +37,24 @@ parse(int argc, char** argv)
       std::cout << options.help({ "" }) << std::endl;
       settings.printed_help_msg = true;
     }
-
     if (print_progress) {
       settings.print_progress = true;
     }
-
     if (result.count("heuristic")) {
       std::cout << "Saw option ‘heuristic’" << std::endl;
       auto& heuristic = result["heuristic"].as<std::string>();
       std::cout << "–– gives: " << heuristic << std::endl;
     }
-
     if (result.count("input-file")) {
-      settings.read_file = true; 
+      settings.read_file = true;
       settings.file_location = result["input-file"].as<std::string>();
     }
 
   } catch (const cxxopts::OptionException& e) {
     std::cout << "error parsing options: " << e.what() << std::endl;
+    // If an error occurs, we set parsing_error.
+    // This is the first thing we check in main, thus we don't have to worry
+    // about using unintended other values that we didn't fill the struct with.
     settings.parsing_error = true;
   }
   return settings;
