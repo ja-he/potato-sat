@@ -1,5 +1,6 @@
 CC := clang++
-FLAGS := -Wall -Wextra -Wpedantic -O3 -std=c++2a
+FLAGS := -Wall -Wextra -Wpedantic -O3
+STANDARD :=  -std=c++2a
 SRCEXT := cc
 SRCDIR := src
 TESTDIR := test
@@ -12,14 +13,14 @@ CONDITIONALBINDIRCREATION := if [ ! -d bin ]; then mkdir bin; fi
 
 all: 
 	$(CONDITIONALBINDIRCREATION)
-	$(CC) $(FLAGS) $(MAINFILE) $(SOURCES) -o $(PROGNAME)
+	$(CC) $(STANDARD) $(FLAGS) $(MAINFILE) $(SOURCES) -o $(PROGNAME)
 
 testsuite: 
 	$(CONDITIONALBINDIRCREATION)
-	$(CC) $(TESTFILE) $(SOURCES) -o $(TESTPROGNAME)
+	$(CC) $(STANDARD) $(TESTFILE) $(SOURCES) -o $(TESTPROGNAME)
 
 basic: 
-	$(CC) $(SOURCES) -o $(PROGNAME)
+	$(CC) $(STANDARD) $(SOURCES) -o $(PROGNAME)
 
 clean: 
 	rm -r bin/*
