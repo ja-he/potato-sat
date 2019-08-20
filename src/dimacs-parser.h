@@ -24,4 +24,7 @@ dimacs_line_is_comment(const std::string& line);
 std::optional<Clause>
 parse_clause(std::string& clausestr);
 
+bool
+read_in_dimacs_file(std::string file_location, Clause_set& clause_set_buf); 
+
 #endif

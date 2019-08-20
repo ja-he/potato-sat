@@ -1,10 +1,12 @@
 #include "dimacs-parser.h"
 #include <iostream>
+#include <iomanip>
 #include <iterator>
 #include <optional>
 #include <sstream>
 #include <string>
 #include <vector>
+#include <fstream>
 
 bool
 dimacs_line_is_comment(const std::string& line)
@@ -47,4 +49,37 @@ parse_clause(std::string& clausestr)
   }
 
   return result;
+}
+
+bool
+read_in_dimacs_file(std::string file_location, Clause_set& clause_set_buf) 
+{
+  std::ifstream given_input_file(file_location, std::ios::in);
+
+  // TODO(ztf) further error handling, probably...
+  if (!given_input_file.is_open()) {
+    std::cerr << "Error reading the provided file ('"
+              << file_location << "')" << std::endl;
+    return 1;
+  }
+
+  std::string current_line;
+  std::optional<Clause> current_clause;
+  std::cout << "GIVEN A FILE, READING...\n";
+  while (std::getline(given_input_file, current_line)) {
+    if (!dimacs_line_is_comment(current_line)) {
+      current_clause = parse_clause(current_line);
+      if (current_clause.has_value()) {
+        std::cout << std::setw(30) << " | ";
+        print_clause(current_clause.value());
+        clause_set_buf.insert(current_clause.value());
+      } else {
+        std::cout << std::setw(30) << " | seems to have had no value...";
+      }
+      std::cout << '\r' << current_line << '\n';
+    }
+  }
+  std::cout << std::flush;
+
+  return true;
 }
