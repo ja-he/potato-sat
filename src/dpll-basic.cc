@@ -97,11 +97,14 @@ propagate_unit_clauses(Clause_set& s)
 void
 eliminate_pure_literals(Clause_set& s)
 {
+
+  // DBG
   std::cout << "    elim-pure-lits was give clause set ";
   print_clause_set(s);
 
   std::set<Literal> pure_literals = find_pure_literals(s);
 
+  // DBG
   std::cout << "    found pure lits ";
   print_clause(pure_literals);
   std::cout << std::endl;
