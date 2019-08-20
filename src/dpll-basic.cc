@@ -75,12 +75,17 @@ propagate_unit_clauses(Clause_set& s)
 
     // erase -l from all clauses, cant be assigned
     Literal negated_unit_literal = (-1) * unit_literal;
-    for (Clause c : s) {
+    Clause_set clauses_to_reduce; 
+    for (Clause const& c : s) {
       if (c.count(negated_unit_literal) > 0) {
-        s.erase(c);
-        c.erase(negated_unit_literal);
-        s.insert(c);
+        clauses_to_reduce.insert(c); 
       }
+    }
+
+    for (Clause c : clauses_to_reduce) {
+      s.erase(c); 
+      c.erase(negated_unit_literal); 
+      s.insert(c); 
     }
   }
 
