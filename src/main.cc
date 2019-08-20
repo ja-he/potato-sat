@@ -23,10 +23,10 @@ main(int argc, char** argv)
 
   if (settings.read_file) {
 
-    read_in_dimacs_file(settings.file_location, s); 
+    read_in_dimacs_file(settings.file_location, s);
 
     /*
-    */
+     */
 
   } else {
     // TODO(ztf) read STDIN

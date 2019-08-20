@@ -1,12 +1,12 @@
 #include "dimacs-parser.h"
-#include <iostream>
+#include <fstream>
 #include <iomanip>
+#include <iostream>
 #include <iterator>
 #include <optional>
 #include <sstream>
 #include <string>
 #include <vector>
-#include <fstream>
 
 bool
 dimacs_line_is_comment(const std::string& line)
@@ -16,12 +16,12 @@ dimacs_line_is_comment(const std::string& line)
 
 // TODO(ztf)
 //   thinking about having parse_dimacs_line() instead of parse_clause be
-//   called by read_in_dimacs_file() and then return a pair or struct  of two 
-//   values where one is of type 
+//   called by read_in_dimacs_file() and then return a pair or struct  of two
+//   values where one is of type
 //        enum line_type { comment, p-line, clause, error }
-//   and the other of type 
+//   and the other of type
 //        Clause
-//   and is potentially empty (unless the former == clause). 
+//   and is potentially empty (unless the former == clause).
 
 std::optional<Clause>
 parse_clause(std::string& clausestr)
@@ -61,14 +61,14 @@ parse_clause(std::string& clausestr)
 }
 
 bool
-read_in_dimacs_file(std::string file_location, Clause_set& clause_set_buf) 
+read_in_dimacs_file(std::string file_location, Clause_set& clause_set_buf)
 {
   std::ifstream given_input_file(file_location, std::ios::in);
 
   // TODO(ztf) further error handling, probably...
   if (!given_input_file.is_open()) {
-    std::cerr << "Error reading the provided file ('"
-              << file_location << "')" << std::endl;
+    std::cerr << "Error reading the provided file ('" << file_location << "')"
+              << std::endl;
     return 1;
   }
 
