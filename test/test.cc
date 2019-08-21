@@ -19,6 +19,17 @@ TEST_CASE("propagate on empty should return empty", "[propagate_unit_clauses]")
   REQUIRE(input == result);
 }
 
+TEST_CASE("unit-propagation should end up with an empty clause-set",
+          "[propagate_unit_clauses]")
+{
+  Clause_set input = {
+    { 1, 2, 3, 4, 5 }, { 1, 2, 3, 4 }, { 1, 2, 3 }, { 1, 2 }, { 1 }
+  };
+  Clause_set result{};
+  propagate_unit_clauses(input);
+  REQUIRE(input == result);
+}
+
 TEST_CASE("this should not provoke a segfault", "[dpll]")
 {
 
