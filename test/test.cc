@@ -3,7 +3,7 @@
 #include "../src/dpll-basic.h"
 #include "catch2/catch.h"
 
-TEST_CASE("propagate should remove unit clause", "[propagate_unit_clauses]")
+TEST_CASE("propagate removes a unit clause", "[propagate_unit_clauses]")
 {
   Clause_set input{ { 1 }, { 2, 3 }, { 4, 5, 6 } };
   Clause_set result{ { 2, 3 }, { 4, 5, 6 } };
@@ -11,7 +11,7 @@ TEST_CASE("propagate should remove unit clause", "[propagate_unit_clauses]")
   REQUIRE(input == result);
 }
 
-TEST_CASE("propagate on empty should return empty", "[propagate_unit_clauses]")
+TEST_CASE("propagate on empty returns empty", "[propagate_unit_clauses]")
 {
   Clause_set input{};
   Clause_set result{};
@@ -19,7 +19,7 @@ TEST_CASE("propagate on empty should return empty", "[propagate_unit_clauses]")
   REQUIRE(input == result);
 }
 
-TEST_CASE("unit-propagation should end up with an empty clause-set",
+TEST_CASE("unit propagation propagates until no unit-clauses remain",
           "[propagate_unit_clauses]")
 {
   Clause_set input = {
@@ -30,7 +30,7 @@ TEST_CASE("unit-propagation should end up with an empty clause-set",
   REQUIRE(input == result);
 }
 
-TEST_CASE("this should not provoke a segfault", "[dpll]")
+TEST_CASE("larger test that used to cause a segfault", "[dpll]")
 {
 
   Clause_set segfault_provoker = {
@@ -44,4 +44,27 @@ TEST_CASE("this should not provoke a segfault", "[dpll]")
     { -25, -1, 2, 26 },   { -26, -2, 1, 25 },  { 1, 2, 25, 26 }
   };
   REQUIRE(dpll(segfault_provoker));
+}
+
+TEST_CASE("clause set with unit clause is correctly identified",
+          "[has_unit_clause]")
+{
+  REQUIRE(has_unit_clause({ { 1, 2 }, { 3 }, { 4, 5 } }));
+}
+
+TEST_CASE("empty clause is not misidentified for unit clause",
+          "[has_unit_clause]")
+{
+  REQUIRE(!has_unit_clause({ { 1, 2 }, {}, { 4, 5 } }));
+}
+
+TEST_CASE("clause set without unit clause is correctly identified",
+          "[has_unit_clause]")
+{
+  REQUIRE(!has_unit_clause({ { 1, 2 }, { 3, 4 }, { 4, 5 } }));
+}
+
+TEST_CASE("empty clause set is correctly identified", "[has_unit_clause]")
+{
+  REQUIRE(!has_unit_clause({}));
 }
