@@ -22,6 +22,16 @@ is_empty(const Clause_set& s) -> bool
 }
 
 auto
+has_unit_clause(const Clause_set& s) -> bool
+{
+  for (Clause const& c : s) {
+    if (c.size() == 1)
+      return true;
+  }
+  return false;
+}
+
+auto
 has_empty_clause(const Clause_set& s) -> bool
 {
   for (Clause const& c : s) {
@@ -44,21 +54,12 @@ assign_literal(const Clause_set& s, Literal l) -> Clause_set
 void
 propagate_unit_clauses(Clause_set& s)
 {
-  // DBG
-  std::cout << "    given clause set: ";
-  print_clause_set(s);
-
   std::set<Literal> unit_literals = std::set<Literal>();
   for (Clause const& c : s) {
     if (c.size() == 1) {
       unit_literals.insert(*(c.begin()));
     }
   }
-
-  // DBG
-  std::cout << "    found unit literals: ";
-  print_clause(unit_literals);
-  std::cout << std::endl;
 
   for (Literal unit_literal : unit_literals) {
 
@@ -89,25 +90,17 @@ propagate_unit_clauses(Clause_set& s)
     }
   }
 
-  // DBG
-  std::cout << "    final clause set: ";
-  print_clause_set(s);
+  if (has_unit_clause(s)) {
+    propagate_unit_clauses(s); 
+  }
+
 }
 
 void
 eliminate_pure_literals(Clause_set& s)
 {
 
-  // DBG
-  std::cout << "    elim-pure-lits was give clause set ";
-  print_clause_set(s);
-
   std::set<Literal> pure_literals = find_pure_literals(s);
-
-  // DBG
-  std::cout << "    found pure lits ";
-  print_clause(pure_literals);
-  std::cout << std::endl;
 
   Clause_set clauses_to_eliminate;
   for (Clause const& c : s) {
@@ -157,25 +150,28 @@ find_pure_literals(const Clause_set& s) -> std::set<Literal>
   return result;
 }
 
+void
+print_progress(const std::string& lead, const Clause_set& s)
+{
+  if (print_progress_basic_dpll) {
+    std::cout << lead; 
+    print_clause_set(s); 
+  }
+}
+
 auto
 dpll(Clause_set s) -> bool
 {
-  // DBG
-  std::cout << "dpll for ";
-  print_clause_set(s);
-
-  // DBG
-  std::cout << "  UNITPROP:" << std::endl;
+  print_progress("DPLL for clause set:    ", s); 
 
   propagate_unit_clauses(s);
+  print_progress("  | unit-propagation => ", s); 
 
   if (has_empty_clause(s))
     return false;
 
-  // DBG
-  std::cout << "  PURELITELIM:" << std::endl;
-
   eliminate_pure_literals(s);
+  print_progress("  | pure lit. elim.  => ", s); 
 
   if (is_empty(s))
     return true;

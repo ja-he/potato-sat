@@ -3,6 +3,8 @@
 
 #include <set>
 
+inline bool print_progress_basic_dpll; 
+
 /**
  * A literal is a possible but not necessarily negated atom (which is a boolean
  * variable and could be thought of as an unsigned int in the context of this
@@ -136,6 +138,9 @@ is_empty(const Clause_set& s) -> bool;
 auto
 has_empty_clause(const Clause_set& s) -> bool;
 
+auto
+has_unit_clause(const Clause_set& s) -> bool;
+
 /**
  * Prints a given set of clauses.
  *
@@ -151,5 +156,8 @@ print_clause_set(const Clause_set& s);
  */
 void
 print_clause(const Clause& c);
+
+void
+print_progress(const std::string& lead, const Clause_set& s);
 
 #endif

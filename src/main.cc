@@ -30,7 +30,11 @@ main(int argc, char** argv)
     }
   } else {
     // TODO(ztf) read STDIN
-    return EXIT_SUCCESS;
+    return EXIT_SUCCESS; // this will be removed
+  }
+
+  if (settings.print_progress) {
+    print_progress_basic_dpll = true; 
   }
 
   std::cout << ((dpll(s)) ? "SAT" : "UNSAT") << std::endl;
