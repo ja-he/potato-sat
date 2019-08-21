@@ -130,20 +130,22 @@ eliminate_pure_literals(Clause_set& s)
 
   std::set<Literal> pure_literals = find_pure_literals(s);
 
-  Clause_set clauses_to_eliminate;
-  for (Clause const& c : s) {
-    for (Literal l : c) {
-      if (pure_literals.count(l) > 0) {
-        clauses_to_eliminate.insert(c);
+  while (!pure_literals.empty()) {
+    Clause_set clauses_to_eliminate;
+    for (Clause const& c : s) {
+      for (Literal l : c) {
+        if (pure_literals.count(l) > 0) {
+          clauses_to_eliminate.insert(c);
+        }
       }
     }
-  }
 
-  for (Clause const& c : clauses_to_eliminate) {
-    s.erase(c);
-  }
+    for (Clause const& c : clauses_to_eliminate) {
+      s.erase(c);
+    }
 
-  /* TODO */
+    pure_literals = find_pure_literals(s); 
+  }
 }
 
 auto
