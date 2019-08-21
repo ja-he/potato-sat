@@ -21,26 +21,19 @@ is_problem_line(const std::string& line)
 }
 
 void
-parse_problem_line(std::string& line) 
-{ /* TODO */ }
-
-// TODO(ztf)
-//   thinking about having parse_dimacs_line() instead of parse_clause be
-//   called by read_in_dimacs_file() and then return a pair or struct  of two
-//   values where one is of type
-//        enum line_type { comment, p-line, clause, error }
-//   and the other of type
-//        Clause
-//   and is potentially empty (unless the former == clause).
+parse_problem_line(std::string& line)
+{ 
+  /* TODO */
+}
 
 DIMACS_line_type
 parse_dimacs_line(std::string& line, Clause& clause_buf)
 {
   if (is_comment(line)) {
-    return comment; 
+    return comment;
   } else if (is_problem_line(line)) {
     parse_problem_line(line);
-    return problem; 
+    return problem;
   }
 
   std::istringstream iss(line);
@@ -60,9 +53,9 @@ parse_dimacs_line(std::string& line, Clause& clause_buf)
         clause_buf.insert(prospective_literal);
       }
     } catch (...) {
-      std::cerr << "error encountered: line (" << line
-                << ") not recognized" << std::endl;
-      return unrecognized; 
+      std::cerr << "error encountered: line (" << line << ") not recognized"
+                << std::endl;
+      return unrecognized;
     }
   }
   return clause;
@@ -80,7 +73,7 @@ read_in_dimacs_file(std::string file_location, Clause_set& clause_set_buf)
     return 1;
   }
 
-  unsigned int line_nr = 0; 
+  unsigned int line_nr = 0;
   std::string current_line;
   std::optional<Clause> current_clause;
   std::cout << "GIVEN A FILE, READING...\n";
@@ -88,24 +81,24 @@ read_in_dimacs_file(std::string file_location, Clause_set& clause_set_buf)
     Clause current_clause;
     DIMACS_line_type parse_result =
       parse_dimacs_line(current_line, current_clause);
-    std::cout << ++line_nr << " ["; 
+    std::cout << ++line_nr << " [";
     switch (parse_result) {
-      case clause: 
-        std::cout << "clause]: "; 
+      case clause:
+        std::cout << "clause]: ";
         print_clause(current_clause);
         clause_set_buf.insert(current_clause);
-        break; 
-      case comment: 
-        std::cout << "comment]"; 
         break;
-      case problem: 
-        std::cout << "problem]"; 
+      case comment:
+        std::cout << "comment]";
         break;
-      case unrecognized: 
-        std::cout << "unrecognized]"; 
+      case problem:
+        std::cout << "problem]";
+        break;
+      case unrecognized:
+        std::cout << "unrecognized]";
         break;
     }
-    std::cout << '\n'; 
+    std::cout << '\n';
   }
   std::cout << std::flush;
 
