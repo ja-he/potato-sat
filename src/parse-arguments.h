@@ -21,7 +21,7 @@ public:
   /** The location of the requested file (empty if no file read requested) */
   std::string file_location;
   /** The heuristic by which to choose literals */
-  Literal_choosing_heuristic h = random_choice_heuristic;
+  Literal_choosing_heuristic heuristic = random_choice_heuristic;
   // TODO(ztf) lots missing here, gotta think up all the proper options etc
 };
 

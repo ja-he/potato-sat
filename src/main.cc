@@ -36,6 +36,7 @@ main(int argc, char** argv)
   if (settings.print_progress) {
     print_progress_basic_dpll = true; 
   }
+  heuristic_to_choose_by = settings.heuristic; 
 
   std::cout << ((dpll(s)) ? "SAT" : "UNSAT") << std::endl;
 

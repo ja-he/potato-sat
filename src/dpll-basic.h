@@ -2,6 +2,7 @@
 #define DPLL_BASIC_H
 
 #include <set>
+#include <map>
 
 inline bool print_progress_basic_dpll; 
 
@@ -47,6 +48,8 @@ enum Literal_choosing_heuristic
   lefv_heuristic
 };
 
+inline Literal_choosing_heuristic heuristic_to_choose_by;
+
 /**
  * Negates a given literal.
  *
@@ -66,6 +69,12 @@ negate_literal(Literal l) -> Literal;
  */
 auto
 choose_literal(const Clause_set& s, Literal_choosing_heuristic h) -> Literal;
+
+/**
+ * TODO(ztf)
+ */
+Literal
+var_with_max_estimate(const std::map<Literal, float> heuristic_estimates);
 
 /**
  * Performs a basic variant of the Davis-Putnam-Logemann-Loveland (or DPLL)

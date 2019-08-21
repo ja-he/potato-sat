@@ -41,9 +41,17 @@ parse(int argc, char** argv)
       settings.print_progress = true;
     }
     if (result.count("heuristic")) {
-      std::cout << "Saw option ‘heuristic’" << std::endl;
-      auto& heuristic = result["heuristic"].as<std::string>();
-      std::cout << "–– gives: " << heuristic << std::endl;
+      auto& heuristic_name = result["heuristic"].as<std::string>();
+
+      // the switch stmt doesn't work on strings...? 
+      // TODO(ztf) this needs to improved and extended
+      if (heuristic_name == "r") {
+        settings.heuristic = random_choice_heuristic; 
+      } else if (heuristic_name == "j") {
+        settings.heuristic = jerosolow_wang_heuristic;
+      } else {
+        settings.heuristic = random_choice_heuristic; 
+      }
     }
     if (result.count("input-file")) {
       settings.read_file = true;

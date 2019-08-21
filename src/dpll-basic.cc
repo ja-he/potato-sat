@@ -1,6 +1,9 @@
 #include "dpll-basic.h"
+#include <cmath>
 #include <iostream>
+#include <map>
 #include <set>
+#include <algorithm>
 
 auto
 negate_literal(Literal l) -> Literal
@@ -12,7 +15,33 @@ auto
 choose_literal(const Clause_set& s, Literal_choosing_heuristic h) -> Literal
 {
   // TODO: actually use the indicated heuristic
+  switch (h) {
+    case random_choice_heuristic:
+      // TODO
+      return *(s.begin()->begin());
+    case jerosolow_wang_heuristic:
+      std::map<Literal, float> variable_jerowang_heuristic_eval;
+      for (Clause const& c : s) {
+        for (Literal l : c) {
+          if (l < 0)
+            l *= (-1);
+          variable_jerowang_heuristic_eval[l] += std::pow(2, (-1) * c.size());
+        }
+      }
+      return var_with_max_estimate(variable_jerowang_heuristic_eval);
+  }
+
+  // just return the first-best value, you find
   return *(s.begin()->begin());
+}
+
+Literal
+var_with_max_estimate(const std::map<Literal, float> heuristic_estimates)
+{
+  return std::max_element(std::begin(heuristic_estimates),
+                          std::end(heuristic_estimates),
+                          [](auto l, auto r) { return l.second < r.second; })
+    ->first;
 }
 
 auto
@@ -91,9 +120,8 @@ propagate_unit_clauses(Clause_set& s)
   }
 
   if (has_unit_clause(s)) {
-    propagate_unit_clauses(s); 
+    propagate_unit_clauses(s);
   }
-
 }
 
 void
@@ -154,31 +182,31 @@ void
 print_progress(const std::string& lead, const Clause_set& s)
 {
   if (print_progress_basic_dpll) {
-    std::cout << lead; 
-    print_clause_set(s); 
+    std::cout << lead;
+    print_clause_set(s);
   }
 }
 
 auto
 dpll(Clause_set s) -> bool
 {
-  print_progress("DPLL for clause set:    ", s); 
+  print_progress("DPLL for clause set:    ", s);
 
   propagate_unit_clauses(s);
-  print_progress("  | unit-propagation => ", s); 
+  print_progress("  | unit-propagation => ", s);
 
   if (has_empty_clause(s))
     return false;
 
   eliminate_pure_literals(s);
-  print_progress("  | pure lit. elim.  => ", s); 
+  print_progress("  | pure lit. elim.  => ", s);
 
   if (is_empty(s))
     return true;
 
   // TODO!
 
-  Literal l = choose_literal(s, random_choice_heuristic);
+  Literal l = choose_literal(s, heuristic_to_choose_by);
   Literal not_l = negate_literal(l);
   return dpll(assign_literal(s, l)) || dpll(assign_literal(s, not_l));
 }
