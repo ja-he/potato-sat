@@ -32,7 +32,6 @@ TEST_CASE("unit propagation propagates until no unit-clauses remain",
 
 TEST_CASE("larger test that used to cause a segfault", "[dpll]")
 {
-
   Clause_set segfault_provoker = {
     { -4, -3, -2, -1 },   { -3, -1, 2, 4 },    { -4, -2, 1, 3 },
     { 1, 2, 3, 4 },       { -10, -9, -2, -1 }, { -9, -1, 2, 10 },
@@ -67,4 +66,58 @@ TEST_CASE("clause set without unit clause is correctly identified",
 TEST_CASE("empty clause set is correctly identified", "[has_unit_clause]")
 {
   REQUIRE(!has_unit_clause({}));
+}
+
+TEST_CASE("elimination of pure literals", "[eliminate_pure_literals]")
+{
+  {
+    Clause_set input{};
+    Clause_set expectation{};
+    eliminate_pure_literals(input);
+    REQUIRE(input == expectation);
+  }
+  {
+    Clause_set input{ {} };
+    Clause_set expectation{ {} };
+    eliminate_pure_literals(input);
+    REQUIRE(input == expectation);
+  }
+  {
+    Clause_set input{ { 1 } };
+    Clause_set expectation{};
+    eliminate_pure_literals(input);
+    REQUIRE(input == expectation);
+  }
+  {
+    Clause_set input{ { -1 } };
+    Clause_set expectation{};
+    eliminate_pure_literals(input);
+    REQUIRE(input == expectation);
+  }
+  {
+    Clause_set input{ { 1 }, { 2, 3 } };
+    Clause_set expectation{};
+    eliminate_pure_literals(input);
+    REQUIRE(input == expectation);
+  }
+  {
+    Clause_set input{ { 1 }, { -1 }, { 2 } };
+    Clause_set expectation{ { 1 }, { -1 } };
+    eliminate_pure_literals(input);
+    REQUIRE(input == expectation);
+  }
+  {
+    Clause_set input{ { 1 }, { -1, 2 }, { -2 } };
+    Clause_set expectation{ { 1 }, { -1, 2 }, { -2 } };
+    eliminate_pure_literals(input);
+    REQUIRE(input == expectation);
+  }
+  {
+    Clause_set input{ { -13, -8, -7 }, { -12, 1, 7 }, { -6, -5 },
+                      { -4, 5, 10 },   { -4, 6, 11 }, { -3, -2, 4 },
+                      { -1, 2 },       { -1, 3, 9 },  { 1, 8 } };
+    Clause_set expectation{};
+    eliminate_pure_literals(input);
+    REQUIRE(input == expectation);
+  }
 }
