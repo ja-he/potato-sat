@@ -1,9 +1,9 @@
 #include "dpll-basic.h"
+#include <algorithm>
 #include <cmath>
 #include <iostream>
 #include <map>
 #include <set>
-#include <algorithm>
 
 auto
 negate_literal(Literal l) -> Literal
@@ -17,7 +17,7 @@ choose_literal(const Clause_set& s, Literal_choosing_heuristic h) -> Literal
   // TODO: actually use the indicated heuristic
   switch (h) {
     case random_choice_heuristic:
-      // TODO
+      // TODO(ztf) this isn't random, its just the first one found
       return *(s.begin()->begin());
     case jerosolow_wang_heuristic:
       std::map<Literal, float> variable_jerowang_heuristic_eval;
@@ -36,7 +36,7 @@ choose_literal(const Clause_set& s, Literal_choosing_heuristic h) -> Literal
 }
 
 Literal
-var_with_max_estimate(const std::map<Literal, float> heuristic_estimates)
+var_with_max_estimate(const std::map<Literal, float>& heuristic_estimates)
 {
   return std::max_element(std::begin(heuristic_estimates),
                           std::end(heuristic_estimates),
@@ -92,7 +92,7 @@ propagate_unit_clauses(Clause_set& s)
 
   for (Literal unit_literal : unit_literals) {
 
-    // erase any clause that contains l
+    // erase any clause that contains the unit literal
     Clause_set clauses_containing_unit_literal = Clause_set();
     for (Clause const& c : s) {
       if (c.count(unit_literal) > 0) {
@@ -103,7 +103,7 @@ propagate_unit_clauses(Clause_set& s)
       s.erase(c);
     }
 
-    // erase -l from all clauses, cant be assigned
+    // erase -unit_literal from all clauses, cant be assigned
     Literal negated_unit_literal = (-1) * unit_literal;
     Clause_set clauses_to_reduce;
     for (Clause const& c : s) {
@@ -119,6 +119,12 @@ propagate_unit_clauses(Clause_set& s)
     }
   }
 
+
+  // TODO(ztf) could be optimized, basically loops once again here and also once 
+  //           at the top of the function. 
+  //           What i  should do is build the set at the top of the function, 
+  //           then check if it's empty (and if so, just return) and at the 
+  //           bottom just call propagate...() again.
   if (has_unit_clause(s)) {
     propagate_unit_clauses(s);
   }
@@ -144,7 +150,7 @@ eliminate_pure_literals(Clause_set& s)
       s.erase(c);
     }
 
-    pure_literals = find_pure_literals(s); 
+    pure_literals = find_pure_literals(s);
   }
 }
 
@@ -206,7 +212,7 @@ dpll(Clause_set s) -> bool
   if (is_empty(s))
     return true;
 
-  // TODO!
+  // TODO(ztf) case splitting
 
   Literal l = choose_literal(s, heuristic_to_choose_by);
   Literal not_l = negate_literal(l);

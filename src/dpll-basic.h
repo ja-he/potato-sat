@@ -74,7 +74,7 @@ choose_literal(const Clause_set& s, Literal_choosing_heuristic h) -> Literal;
  * TODO(ztf)
  */
 Literal
-var_with_max_estimate(const std::map<Literal, float> heuristic_estimates);
+var_with_max_estimate(const std::map<Literal, float>& heuristic_estimates);
 
 /**
  * Performs a basic variant of the Davis-Putnam-Logemann-Loveland (or DPLL)
