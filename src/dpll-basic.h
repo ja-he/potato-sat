@@ -1,10 +1,10 @@
 #ifndef DPLL_BASIC_H
 #define DPLL_BASIC_H
 
-#include <set>
 #include <map>
+#include <set>
 
-inline bool print_progress_basic_dpll; 
+inline bool print_progress_basic_dpll;
 
 /**
  * A literal is a possible but not necessarily negated atom (which is a boolean
@@ -56,8 +56,8 @@ inline Literal_choosing_heuristic heuristic_to_choose_by;
  * @param l the literal
  * @return  the negation of l
  */
-auto
-negate_literal(Literal l) -> Literal;
+Literal
+negate_literal(Literal l);
 
 /**
  * Chooses a Literal from the given set of clauses via a given heuristic
@@ -67,8 +67,8 @@ negate_literal(Literal l) -> Literal;
  * @param h   a heuristic by which to choose a literal
  * @return    a literal
  */
-auto
-choose_literal(const Clause_set& s, Literal_choosing_heuristic h) -> Literal;
+Literal
+choose_literal(const Clause_set& s, Literal_choosing_heuristic h);
 
 /**
  * TODO(ztf)
@@ -96,8 +96,8 @@ dpll(Clause_set s);
  * @param l   the literal
  * @return    another clause set extended by the unit clause {l}
  */
-auto
-assign_literal(const Clause_set& s, Literal l) -> Clause_set;
+Clause_set
+assign_literal(const Clause_set& s, Literal l);
 
 /**
  * Deletes all unit clauses in the clause set as well as any other clauses
@@ -126,8 +126,8 @@ eliminate_pure_literals(Clause_set& s);
  * @param s   the set of clauses
  * @return    all pure literals in the set of clauses
  */
-auto
-find_pure_literals(const Clause_set& s) -> std::set<Literal>;
+std::set<Literal>
+find_pure_literals(const Clause_set& s);
 
 /**
  * Returns whether a given set of clauses is empty, i.E. contains no clauses.
@@ -135,8 +135,8 @@ find_pure_literals(const Clause_set& s) -> std::set<Literal>;
  * @param s the set of clauses
  * @return  whether s is empty
  */
-auto
-is_empty(const Clause_set& s) -> bool;
+bool
+is_empty(const Clause_set& s);
 
 /**
  * Returns whether a given set of clauses contains an empty clause.
@@ -144,11 +144,14 @@ is_empty(const Clause_set& s) -> bool;
  * @param s the set of clauses
  * @return  whether {} in s
  */
-auto
-has_empty_clause(const Clause_set& s) -> bool;
+bool
+has_empty_clause(const Clause_set& s);
 
-auto
-has_unit_clause(const Clause_set& s) -> bool;
+/**
+ * TODO
+ */
+bool
+has_unit_clause(const Clause_set& s);
 
 /**
  * Prints a given set of clauses.
@@ -166,6 +169,9 @@ print_clause_set(const Clause_set& s);
 void
 print_clause(const Clause& c);
 
+/**
+ * TODO
+ */
 void
 print_progress(const std::string& lead, const Clause_set& s);
 

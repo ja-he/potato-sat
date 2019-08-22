@@ -5,14 +5,14 @@
 #include <map>
 #include <set>
 
-auto
-negate_literal(Literal l) -> Literal
+Literal
+negate_literal(Literal l)
 {
   return (-1) * l;
 }
 
-auto
-choose_literal(const Clause_set& s, Literal_choosing_heuristic h) -> Literal
+Literal
+choose_literal(const Clause_set& s, Literal_choosing_heuristic h)
 {
   // TODO: actually use the indicated heuristic
   switch (h) {
@@ -44,14 +44,14 @@ var_with_max_estimate(const std::map<Literal, float>& heuristic_estimates)
     ->first;
 }
 
-auto
-is_empty(const Clause_set& s) -> bool
+bool
+is_empty(const Clause_set& s)
 {
   return s.empty();
 }
 
-auto
-has_unit_clause(const Clause_set& s) -> bool
+bool
+has_unit_clause(const Clause_set& s)
 {
   for (Clause const& c : s) {
     if (c.size() == 1)
@@ -60,8 +60,8 @@ has_unit_clause(const Clause_set& s) -> bool
   return false;
 }
 
-auto
-has_empty_clause(const Clause_set& s) -> bool
+bool
+has_empty_clause(const Clause_set& s)
 {
   for (Clause const& c : s) {
     if (c.empty())
@@ -70,8 +70,8 @@ has_empty_clause(const Clause_set& s) -> bool
   return false;
 }
 
-auto
-assign_literal(const Clause_set& s, Literal l) -> Clause_set
+Clause_set
+assign_literal(const Clause_set& s, Literal l)
 {
   Clause new_clause = Clause();
   new_clause.insert(l);
@@ -119,11 +119,10 @@ propagate_unit_clauses(Clause_set& s)
     }
   }
 
-
-  // TODO(ztf) could be optimized, basically loops once again here and also once 
-  //           at the top of the function. 
-  //           What i  should do is build the set at the top of the function, 
-  //           then check if it's empty (and if so, just return) and at the 
+  // TODO(ztf) could be optimized, basically loops once again here and also once
+  //           at the top of the function.
+  //           What i  should do is build the set at the top of the function,
+  //           then check if it's empty (and if so, just return) and at the
   //           bottom just call propagate...() again.
   if (has_unit_clause(s)) {
     propagate_unit_clauses(s);
@@ -154,8 +153,8 @@ eliminate_pure_literals(Clause_set& s)
   }
 }
 
-auto
-find_pure_literals(const Clause_set& s) -> std::set<Literal>
+std::set<Literal>
+find_pure_literals(const Clause_set& s)
 {
   std::set<Literal> positive_atoms;
   std::set<Literal> negated_atoms;
@@ -195,8 +194,8 @@ print_progress(const std::string& lead, const Clause_set& s)
   }
 }
 
-auto
-dpll(Clause_set s) -> bool
+bool
+dpll(Clause_set s)
 {
   print_progress("DPLL for clause set:    ", s);
 
