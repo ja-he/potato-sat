@@ -14,25 +14,32 @@ negate_literal(Literal l)
 Literal
 choose_literal(const Clause_set& s, Literal_choosing_heuristic h)
 {
-  // TODO: actually use the indicated heuristic
   switch (h) {
+    // TODO(ztf) all the missing heuristics
     case random_choice_heuristic:
       // TODO(ztf) this isn't random, its just the first one found
       return *(s.begin()->begin());
-    case jerosolow_wang_heuristic:
-      std::map<Literal, float> variable_jerowang_heuristic_eval;
-      for (Clause const& c : s) {
-        for (Literal l : c) {
-          if (l < 0)
-            l *= (-1);
-          variable_jerowang_heuristic_eval[l] += std::pow(2, (-1) * c.size());
-        }
-      }
-      return var_with_max_estimate(variable_jerowang_heuristic_eval);
-  }
 
-  // just return the first-best value, you find
-  return *(s.begin()->begin());
+    case jerosolow_wang_heuristic:
+      {
+        std::map<Literal, float> variable_jerowang_heuristic_eval;
+        for (Clause const& c : s) {
+          for (Literal l : c) {
+            if (l < 0) {
+              l *= (-1);
+            }
+            // add 2^(-|c|) where |c| is clause size
+            variable_jerowang_heuristic_eval[l] += std::pow(2, (-1) * c.size());
+          }
+        }
+        return var_with_max_estimate(variable_jerowang_heuristic_eval);
+      }
+
+    default:
+      // just return the first-best value, you find
+      return *(s.begin()->begin());
+
+  }
 }
 
 Literal
