@@ -71,7 +71,13 @@ Literal
 choose_literal(const Clause_set& s, Literal_choosing_heuristic h);
 
 /**
- * TODO(ztf)
+ * Selects the variable (from a given mapping of variables to their respective
+ * heuristic estimates) that has the highest estimate, i.E. the one that
+ * ought to be selected according to the heuristic.
+ *
+ * @param heuristic_estimates   a mapping of variables to heuristic estimates
+ *                              (this mapping should not have any negated
+ *                               variables, i.E. those less than 0, in it)
  */
 Literal
 var_with_max_estimate(const std::map<Literal, float>& heuristic_estimates);
@@ -148,7 +154,10 @@ bool
 has_empty_clause(const Clause_set& s);
 
 /**
- * TODO
+ * Returns whether a given set of clauses contains a unit clause.
+ *
+ * @param s the set of clauses
+ * @return  whether {l} in s
  */
 bool
 has_unit_clause(const Clause_set& s);
@@ -170,7 +179,12 @@ void
 print_clause(const Clause& c);
 
 /**
- * TODO
+ * Prints the given lead followed by the given set of clauses to allow us to
+ * print the progress of the solving  process.
+ *
+ * @param lead  the string that ought to precede the clause set (generally this
+ *              means the context that 'print_progress()' is called from)
+ * @param s     the set of clauses
  */
 void
 print_progress(const std::string& lead, const Clause_set& s);
