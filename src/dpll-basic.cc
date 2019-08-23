@@ -1,4 +1,5 @@
 #include "dpll-basic.h"
+#include "dpll-basic-defs.h"
 #include <algorithm>
 #include <cmath>
 #include <iostream>
@@ -20,25 +21,23 @@ choose_literal(const Clause_set& s, Literal_choosing_heuristic h)
       // TODO(ztf) this isn't random, its just the first one found
       return *(s.begin()->begin());
 
-    case jerosolow_wang_heuristic:
-      {
-        std::map<Literal, float> variable_jerowang_heuristic_eval;
-        for (Clause const& c : s) {
-          for (Literal l : c) {
-            if (l < 0) {
-              l *= (-1);
-            }
-            // add 2^(-|c|) where |c| is clause size
-            variable_jerowang_heuristic_eval[l] += std::pow(2, (-1) * c.size());
+    case jerosolow_wang_heuristic: {
+      std::map<Literal, float> variable_jerowang_heuristic_eval;
+      for (Clause const& c : s) {
+        for (Literal l : c) {
+          if (l < 0) {
+            l *= (-1);
           }
+          // add 2^(-|c|) where |c| is clause size
+          variable_jerowang_heuristic_eval[l] += std::pow(2, (-1) * c.size());
         }
-        return var_with_max_estimate(variable_jerowang_heuristic_eval);
       }
+      return var_with_max_estimate(variable_jerowang_heuristic_eval);
+    }
 
     default:
       // just return the first-best value, you find
       return *(s.begin()->begin());
-
   }
 }
 
@@ -223,24 +222,4 @@ dpll(Clause_set s)
   Literal l = choose_literal(s, heuristic_to_choose_by);
   Literal not_l = negate_literal(l);
   return dpll(assign_literal(s, l)) || dpll(assign_literal(s, not_l));
-}
-
-void
-print_clause(const Clause& c)
-{
-  std::cout << "{ ";
-  for (Literal l : c) {
-    std::cout << l << " ";
-  }
-  std::cout << "} ";
-}
-
-void
-print_clause_set(const Clause_set& s)
-{
-  std::cout << "[ ";
-  for (Clause const& c : s) {
-    print_clause(c);
-  }
-  std::cout << "] " << std::endl;
 }

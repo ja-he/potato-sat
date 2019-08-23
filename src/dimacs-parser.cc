@@ -1,3 +1,4 @@
+#include "dpll-basic-defs.h"
 #include "dimacs-parser.h"
 #include <fstream>
 #include <iomanip>

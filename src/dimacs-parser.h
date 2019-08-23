@@ -1,12 +1,12 @@
 #ifndef DIMACS_PARSER_H
 #define DIMACS_PARSER_H
 
-#include "dpll-basic.h"
+#include "dpll-basic-defs.h"
 #include <optional>
 #include <string>
 
-inline int variable_number; 
-inline int clause_number; 
+inline int variable_number;
+inline int clause_number;
 
 // TODO(ztf):
 //  This probably should be restructured and rethought to somewhat efficiently
@@ -36,7 +36,7 @@ bool
 is_problem_line(const std::string& line);
 
 void
-parse_problem_line(std::string& line); 
+parse_problem_line(std::string& line);
 
 DIMACS_line_type
 parse_dimacs_line(std::string& clausestr, Clause& clause_buf);

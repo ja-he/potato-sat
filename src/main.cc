@@ -1,6 +1,8 @@
 #include "dimacs-parser.h"
+#include "dpll-basic-defs.h"
 #include "dpll-basic.h"
 #include "parse-arguments.h"
+#include "settings.h"
 #include <iostream>
 #include <set>
 
@@ -25,8 +27,8 @@ main(int argc, char** argv)
     if (read_in_dimacs_file(settings.file_location, s)) {
       std::cout << "successfully read in file" << std::endl;
     } else {
-      std::cerr << "error reading file as DIMACS cnf" << std::endl; 
-      return EXIT_FAILURE; 
+      std::cerr << "error reading file as DIMACS cnf" << std::endl;
+      return EXIT_FAILURE;
     }
   } else {
     // TODO(ztf) read STDIN
@@ -34,9 +36,9 @@ main(int argc, char** argv)
   }
 
   if (settings.print_progress) {
-    print_progress_basic_dpll = true; 
+    print_progress_basic_dpll = true;
   }
-  heuristic_to_choose_by = settings.heuristic; 
+  heuristic_to_choose_by = settings.heuristic;
 
   std::cout << ((dpll(s)) ? "SAT" : "UNSAT") << std::endl;
 
