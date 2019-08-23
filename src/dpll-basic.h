@@ -1,10 +1,10 @@
 #ifndef DPLL_BASIC_H
 #define DPLL_BASIC_H
 
+#include "dpll-basic-defs.h"
+#include "settings.h"
 #include <map>
 #include <set>
-#include "settings.h"
-#include "dpll-basic-defs.h"
 
 /**
  * Negates a given literal.
@@ -25,6 +25,18 @@ negate_literal(Literal l);
  */
 Literal
 choose_literal(const Clause_set& s, Literal_choosing_heuristic h);
+
+/**
+ * TODO
+ */
+Literal
+first_best_literal(const Clause_set& s);
+
+/**
+ * TODO
+ */
+Literal
+best_literal_by_jeroslaw_wang(const Clause_set& s);
 
 /**
  * Selects the variable (from a given mapping of variables to their respective
