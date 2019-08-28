@@ -1,7 +1,11 @@
 #define CATCH_CONFIG_MAIN
 
 #include "../src/dpll-basic.h"
+#include "../src/dpll-basic-defs.h"
+#include "../src/dimacs-parser.h"
 #include "catch2/catch.h"
+#include <string>
+#include <set>
 
 TEST_CASE("propagate removes a unit clause", "[propagate_unit_clauses]")
 {
@@ -119,5 +123,75 @@ TEST_CASE("elimination of pure literals", "[eliminate_pure_literals]")
     Clause_set expectation{};
     eliminate_pure_literals(input);
     REQUIRE(input == expectation);
+  }
+}
+
+TEST_CASE("Recognizing that clause lines end with 0", "[ends_with_zero]")
+{
+  REQUIRE(ends_with_zero("0"));
+  REQUIRE(ends_with_zero("1 2 3 0"));
+  REQUIRE(ends_with_zero("-1 0"));
+  REQUIRE(!ends_with_zero("-1 2"));
+  REQUIRE(!ends_with_zero("-1 2 0 "));
+  REQUIRE(!ends_with_zero(" "));
+  REQUIRE(!ends_with_zero(""));
+}
+
+TEST_CASE("DIMACS line types are properly identified", "[parse_dimacs_line]")
+{
+  {
+    std::string line = "c asdf ";
+    Clause buf = {};
+    REQUIRE(parse_dimacs_line(line,buf) == comment);
+  }
+  {
+    std::string line = "c";
+    Clause buf = {};
+    REQUIRE(parse_dimacs_line(line,buf) == comment);
+  }
+  {
+    std::string line = "p";
+    Clause buf = {};
+    REQUIRE(parse_dimacs_line(line,buf) == problem); // maybe should be unknown? or error? 
+  }
+  {
+    std::string line = "p cnf 312 12";
+    Clause buf = {};
+    REQUIRE(parse_dimacs_line(line,buf) == problem);
+  }
+  {
+    std::string line = "1 2 3 0";
+    Clause buf = {};
+    REQUIRE(parse_dimacs_line(line,buf) == clause);
+  }
+  {
+    std::string line = "1 2 -3 0";
+    Clause buf = {};
+    REQUIRE(parse_dimacs_line(line,buf) == clause);
+  }
+  {
+    std::string line = "-1 2 -3 0";
+    Clause buf = {};
+    REQUIRE(parse_dimacs_line(line,buf) == clause);
+  }
+  {
+    std::string line = "0";
+    Clause buf = {};
+    REQUIRE(parse_dimacs_line(line,buf) == clause);
+  }
+  {
+    std::string line = "";
+    Clause buf = {};
+    REQUIRE(parse_dimacs_line(line,buf) == unrecognized);
+  }
+  {
+    std::string line = "12";
+    Clause buf = {};
+    REQUIRE(parse_dimacs_line(line,buf) == unrecognized);
+  }
+  {
+    std::string line = "q";
+    Clause buf = {};
+    REQUIRE(parse_dimacs_line(line,buf) == unrecognized);
   }
 }
