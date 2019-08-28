@@ -13,7 +13,7 @@ parse(int argc, char** argv)
     // easily etc, but then we use the settings we find that way and store them
     // in our own format to return that back to main.
 
-    cxxopts::Options options(argv[0], "[idk what to put here...?]");
+    cxxopts::Options options(argv[0], "`potato-sat` - a simple SAT solver");
     options.positional_help("[optional args]").show_positional_help();
 
     bool print_progress = false;
