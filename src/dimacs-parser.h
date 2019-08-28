@@ -35,6 +35,9 @@ is_comment(const std::string& line);
 bool
 is_problem_line(const std::string& line);
 
+bool
+ends_with_zero(const std::string& line);
+
 void
 parse_problem_line(std::string& line);
 

@@ -1,5 +1,5 @@
-#include "dpll-basic-defs.h"
 #include "dimacs-parser.h"
+#include "dpll-basic-defs.h"
 #include <fstream>
 #include <iomanip>
 #include <iostream>
@@ -23,8 +23,14 @@ is_problem_line(const std::string& line)
 
 void
 parse_problem_line(std::string& line)
-{ 
+{
   /* TODO */
+}
+
+bool
+ends_with_zero(const std::string& line)
+{
+  return line.length() > 0 && line.at(line.length() - 1) == '0';
 }
 
 DIMACS_line_type
@@ -35,31 +41,36 @@ parse_dimacs_line(std::string& line, Clause& clause_buf)
   } else if (is_problem_line(line)) {
     parse_problem_line(line);
     return problem;
-  }
+  } else if (!ends_with_zero(line)) {
+    return unrecognized;
+  } else {
 
-  std::istringstream iss(line);
-  std::vector<std::string> prospective_literals{
-    std::istream_iterator<std::string>{ iss },
-    std::istream_iterator<std::string>{},
-  };
+    // break lines up at whitespaces
+    std::istringstream iss(line);
+    std::vector<std::string> prospective_literals{
+      std::istream_iterator<std::string>{ iss },
+      std::istream_iterator<std::string>{},
+    };
 
-  for (std::string& prospective_literal_str : prospective_literals) {
-    int prospective_literal;
-    try {
-      prospective_literal = std::stoi(prospective_literal_str);
-      if (prospective_literal == 0) {
-        // end of line (according to DIMACS)
-        break;
-      } else {
-        clause_buf.insert(prospective_literal);
+    for (std::string& prospective_literal_str : prospective_literals) {
+      int prospective_literal;
+      try {
+        prospective_literal = std::stoi(prospective_literal_str);
+        if (prospective_literal == 0) {
+          // end of line (according to DIMACS)
+          break;
+        } else {
+          clause_buf.insert(prospective_literal);
+        }
+      } catch (...) {
+        std::cerr << "error encountered: line (" << line << ") not recognized"
+                  << std::endl;
+        return unrecognized;
       }
-    } catch (...) {
-      std::cerr << "error encountered: line (" << line << ") not recognized"
-                << std::endl;
-      return unrecognized;
     }
+
+    return clause;
   }
-  return clause;
 }
 
 bool
