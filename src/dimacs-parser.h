@@ -13,6 +13,14 @@ inline int clause_number;
 //  parse the input, be able to give the user detailed information in case of
 //  errors as well as warnings about non-conformance with the DIMACS format
 //  even when we can handle it.
+// UPDATED:
+//  What I think I want to do here is have a struct of some sort like 
+//    `struct Dimacs_parse_result {...};` 
+//  that contains:
+//    * whether a fatal error occured during parsing -> exit w/ failure 
+//    * whether any non-fatal errors occured         -> output warnings 
+//    * the result of the parse as a Clause_set
+//  Pretty sure this is gonna require a complete overhaul
 
 enum DIMACS_line_type
 {
