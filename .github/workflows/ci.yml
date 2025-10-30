@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y clang
+
+    - name: Build project
+      run: make all
+
+    - name: Upload binary artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: potato-sat-binary
+        path: bin/potato-sat
+        retention-days: 1
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y clang
+
+    - name: Build test suite
+      run: make testsuite
+
+    - name: Run tests
+      run: ./bin/run-tests
+
+    - name: Upload test binary artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-binary
+        path: bin/run-tests
+        retention-days: 1
