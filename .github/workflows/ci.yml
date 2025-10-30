@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main, master, claude/add-ci-and-tests-011CUduaGg99o572B6vkrKL2 ]
   pull_request:
     branches: [ main, master ]
 
