@@ -20,6 +20,6 @@ parse(int argc, char** argv);
  * @param settings the settings
  */
 void
-print_settings(Potato_SAT_settings& settings);
+print_settings(const Potato_SAT_settings& settings);
 
 #endif

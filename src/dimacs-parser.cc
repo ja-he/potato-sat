@@ -22,7 +22,7 @@ is_problem_line(const std::string& line)
 }
 
 void
-parse_problem_line(std::string& line)
+parse_problem_line(const std::string& line)
 {
   /* TODO */
 }
@@ -34,7 +34,7 @@ ends_with_zero(const std::string& line)
 }
 
 DIMACS_line_type
-parse_dimacs_line(std::string& line, Clause& clause_buf)
+parse_dimacs_line(const std::string& line, Clause& clause_buf)
 {
   if (is_comment(line)) {
     return comment;
@@ -52,7 +52,7 @@ parse_dimacs_line(std::string& line, Clause& clause_buf)
       std::istream_iterator<std::string>{},
     };
 
-    for (std::string& prospective_literal_str : prospective_literals) {
+    for (const std::string& prospective_literal_str : prospective_literals) {
       int prospective_literal;
       try {
         prospective_literal = std::stoi(prospective_literal_str);
@@ -74,7 +74,7 @@ parse_dimacs_line(std::string& line, Clause& clause_buf)
 }
 
 bool
-read_in_dimacs_file(std::string file_location, Clause_set& clause_set_buf)
+read_in_dimacs_file(const std::string& file_location, Clause_set& clause_set_buf)
 {
   std::ifstream given_input_file(file_location, std::ios::in);
 

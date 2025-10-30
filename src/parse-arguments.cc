@@ -69,7 +69,7 @@ parse(int argc, char** argv)
 }
 
 void
-print_settings(Potato_SAT_settings& settings)
+print_settings(const Potato_SAT_settings& settings)
 {
   std::cout << "Settings:" << '\n'
             << "  * " << (settings.print_progress ? "" : "not ")

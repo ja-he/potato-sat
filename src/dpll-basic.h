@@ -5,6 +5,7 @@
 #include "settings.h"
 #include <map>
 #include <set>
+#include <string>
 
 /**
  * Negates a given literal.

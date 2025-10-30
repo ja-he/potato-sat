@@ -47,12 +47,12 @@ bool
 ends_with_zero(const std::string& line);
 
 void
-parse_problem_line(std::string& line);
+parse_problem_line(const std::string& line);
 
 DIMACS_line_type
-parse_dimacs_line(std::string& clausestr, Clause& clause_buf);
+parse_dimacs_line(const std::string& clausestr, Clause& clause_buf);
 
 bool
-read_in_dimacs_file(std::string file_location, Clause_set& clause_set_buf);
+read_in_dimacs_file(const std::string& file_location, Clause_set& clause_set_buf);
 
 #endif

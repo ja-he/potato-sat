@@ -2,6 +2,7 @@
 #define SETTINGS_H
 
 #include "dpll-basic-defs.h"
+#include <string>
 
 inline bool print_progress_basic_dpll;
 

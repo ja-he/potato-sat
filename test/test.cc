@@ -140,57 +140,57 @@ TEST_CASE("Recognizing that clause lines end with 0", "[ends_with_zero]")
 TEST_CASE("DIMACS line types are properly identified", "[parse_dimacs_line]")
 {
   {
-    std::string line = "c asdf ";
+    const std::string line = "c asdf ";
     Clause buf = {};
     REQUIRE(parse_dimacs_line(line,buf) == comment);
   }
   {
-    std::string line = "c";
+    const std::string line = "c";
     Clause buf = {};
     REQUIRE(parse_dimacs_line(line,buf) == comment);
   }
   {
-    std::string line = "p";
+    const std::string line = "p";
     Clause buf = {};
-    REQUIRE(parse_dimacs_line(line,buf) == problem); // maybe should be unknown? or error? 
+    REQUIRE(parse_dimacs_line(line,buf) == problem); // maybe should be unknown? or error?
   }
   {
-    std::string line = "p cnf 312 12";
+    const std::string line = "p cnf 312 12";
     Clause buf = {};
     REQUIRE(parse_dimacs_line(line,buf) == problem);
   }
   {
-    std::string line = "1 2 3 0";
+    const std::string line = "1 2 3 0";
     Clause buf = {};
     REQUIRE(parse_dimacs_line(line,buf) == clause);
   }
   {
-    std::string line = "1 2 -3 0";
+    const std::string line = "1 2 -3 0";
     Clause buf = {};
     REQUIRE(parse_dimacs_line(line,buf) == clause);
   }
   {
-    std::string line = "-1 2 -3 0";
+    const std::string line = "-1 2 -3 0";
     Clause buf = {};
     REQUIRE(parse_dimacs_line(line,buf) == clause);
   }
   {
-    std::string line = "0";
+    const std::string line = "0";
     Clause buf = {};
     REQUIRE(parse_dimacs_line(line,buf) == clause);
   }
   {
-    std::string line = "";
+    const std::string line = "";
     Clause buf = {};
     REQUIRE(parse_dimacs_line(line,buf) == unrecognized);
   }
   {
-    std::string line = "12";
+    const std::string line = "12";
     Clause buf = {};
     REQUIRE(parse_dimacs_line(line,buf) == unrecognized);
   }
   {
-    std::string line = "q";
+    const std::string line = "q";
     Clause buf = {};
     REQUIRE(parse_dimacs_line(line,buf) == unrecognized);
   }
